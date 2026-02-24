@@ -3,6 +3,7 @@ package com.tradeverse.trading_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,10 +26,10 @@ public class Transaction {
     private String coinSymbol;
 
     @Column(nullable = false)
-    private Double quantity;
+    private BigDecimal quantity;
 
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @Column(nullable = false)
     private String type; //BUY or SELL

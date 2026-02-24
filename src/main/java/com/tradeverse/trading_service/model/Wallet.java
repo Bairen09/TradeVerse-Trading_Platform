@@ -3,6 +3,8 @@ package com.tradeverse.trading_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "wallet")
 @Data
@@ -20,5 +22,5 @@ public class Wallet {
     private String username;
 
     @Column(nullable = false)
-    private Double balance;
+    private BigDecimal balance;
 }

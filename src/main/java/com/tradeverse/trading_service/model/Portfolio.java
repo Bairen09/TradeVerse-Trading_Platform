@@ -3,6 +3,8 @@ package com.tradeverse.trading_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "portfolio")
 @Data
@@ -23,5 +25,5 @@ public class Portfolio {
     private String coinSymbol;
 
     @Column(nullable = false)
-    private Double quantity;
+    private BigDecimal quantity;
 }

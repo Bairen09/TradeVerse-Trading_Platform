@@ -1,14 +1,13 @@
 package com.tradeverse.trading_service.controller;
 
+import com.tradeverse.trading_service.dto.BuyRequest;
 import com.tradeverse.trading_service.model.Portfolio;
 import com.tradeverse.trading_service.model.Transaction;
 import com.tradeverse.trading_service.model.Wallet;
 import com.tradeverse.trading_service.service.TradingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,5 +32,10 @@ public class TradingController {
     @GetMapping("/history")
     public List<Transaction>getHistory(){
         return tradingService.getTransaction(getUsername());
+    }
+    @PostMapping("/buy")
+    public String buy(@RequestBody BuyRequest request){
+        tradingService.buy(getUsername(),request);
+        return "Buy Successful";
     }
 }
