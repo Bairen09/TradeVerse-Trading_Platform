@@ -1,6 +1,8 @@
 package com.tradeverse.trading_service.controller;
 
 import com.tradeverse.trading_service.dto.BuyRequest;
+import com.tradeverse.trading_service.dto.SellRequest;
+import com.tradeverse.trading_service.dto.TradeResponse;
 import com.tradeverse.trading_service.model.Portfolio;
 import com.tradeverse.trading_service.model.Transaction;
 import com.tradeverse.trading_service.model.Wallet;
@@ -34,8 +36,11 @@ public class TradingController {
         return tradingService.getTransaction(getUsername());
     }
     @PostMapping("/buy")
-    public String buy(@RequestBody BuyRequest request){
-        tradingService.buy(getUsername(),request);
-        return "Buy Successful";
+    public TradeResponse buy(@RequestBody BuyRequest request){
+        return tradingService.buy(getUsername(),request);
+    }
+    @PostMapping("/sell")
+    public TradeResponse sell(@RequestBody SellRequest request){
+        return tradingService.sell(getUsername(),request);
     }
 }
