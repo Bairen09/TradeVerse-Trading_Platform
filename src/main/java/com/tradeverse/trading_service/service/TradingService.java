@@ -25,6 +25,7 @@ public class TradingService {
     public final WalletRepository walletRepository;
     public final PortfolioRepository portfolioRepository;
     public final TransactionRepository transactionRepository;
+    public final MarketService marketService;
 
     public static final BigDecimal INITIAL_PRICE= BigDecimal.valueOf(100000.0);
 
@@ -39,7 +40,7 @@ public class TradingService {
                 });
     }
     public List<PortfolioResponse> getPortfolio(String username){
-        BigDecimal currentPrice= BigDecimal.valueOf(200);
+        BigDecimal currentPrice= marketService.getBitcoinPriceInINR();
         return portfolioRepository.findByUsername(username)
                 .stream()
                 .map(p->{
@@ -53,6 +54,7 @@ public class TradingService {
                             .averageBuyPrice(p.getAverageBuyPrice())
                             .currentPrice(currentPrice)
                             .investedAmount(currentValue)
+                            .currentValue(currentValue)
                             .profitLoss(profitLoss)
                             .build();
                 })
@@ -68,7 +70,7 @@ public class TradingService {
         }
         String coin= request.getCoinSymbol().toUpperCase();
 
-        BigDecimal price= BigDecimal.valueOf(200.0);
+        BigDecimal price= marketService.getBitcoinPriceInINR();
         BigDecimal quantity= BigDecimal.valueOf(request.getQuantity());
 
         BigDecimal totalCost= price.multiply(quantity);
@@ -131,7 +133,7 @@ public class TradingService {
         }
         String coin= request.getCoinSymbol().toUpperCase();
         BigDecimal quantity= BigDecimal.valueOf(request.getQuantity());
-        BigDecimal price= BigDecimal.valueOf(100.0);
+        BigDecimal price= marketService.getBitcoinPriceInINR();
         Portfolio portfolio= portfolioRepository
                 .findByUsernameAndCoinSymbol(username,coin)
                 .orElseThrow(()->new RuntimeException("You don't own this coin"));
