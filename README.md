@@ -27,16 +27,16 @@ TradeVerse consists of two microservices:
 
 ##  Key Features
 
-- ✅ Microservices architecture
-- ✅ Stateless JWT authentication
-- ✅ Spring Security filter chain
-- ✅ Financial precision using BigDecimal
-- ✅ Weighted average buy price logic
-- ✅ Transactional operations with rollback
-- ✅ Real-time market price integration (CoinGecko API)
-- ✅ AI portfolio assistant (Ollama + LLaMA3)
-- ✅ Global exception handling
-- ✅ Clean DTO-based API design
+-  Microservices architecture
+-  Stateless JWT authentication
+-  Spring Security filter chain
+-  Financial precision using BigDecimal
+-  Weighted average buy price logic
+-  Transactional operations with rollback
+-  Real-time market price integration (CoinGecko API)
+-  AI portfolio assistant (Ollama + LLaMA3)
+-  Global exception handling
+-  Clean DTO-based API design
 
 ---
 
@@ -139,4 +139,5 @@ POST /api/ai/ask
 ##  Author
 
 Built as a backend-focused microservices project demonstrating secure authentication, financial modeling, and AI integration.
+
 
