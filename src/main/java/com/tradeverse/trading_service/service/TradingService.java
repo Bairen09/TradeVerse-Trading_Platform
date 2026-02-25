@@ -1,6 +1,7 @@
 package com.tradeverse.trading_service.service;
 
 import com.tradeverse.trading_service.dto.BuyRequest;
+import com.tradeverse.trading_service.dto.PortfolioResponse;
 import com.tradeverse.trading_service.dto.SellRequest;
 import com.tradeverse.trading_service.dto.TradeResponse;
 import com.tradeverse.trading_service.model.Portfolio;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,8 +38,25 @@ public class TradingService {
                     return walletRepository.save(wallet);
                 });
     }
-    public List<Portfolio> getPortfolio(String username){
-        return portfolioRepository.findByUsername(username);
+    public List<PortfolioResponse> getPortfolio(String username){
+        BigDecimal currentPrice= BigDecimal.valueOf(200);
+        return portfolioRepository.findByUsername(username)
+                .stream()
+                .map(p->{
+                    BigDecimal investedAmount= p.getQuantity()
+                            .multiply(p.getAverageBuyPrice());
+                    BigDecimal currentValue= p.getQuantity().multiply(currentPrice);
+                    BigDecimal profitLoss=currentValue.subtract(investedAmount);
+                    return PortfolioResponse.builder()
+                            .coinSymbol(p.getCoinSymbol())
+                            .quantity(p.getQuantity())
+                            .averageBuyPrice(p.getAverageBuyPrice())
+                            .currentPrice(currentPrice)
+                            .investedAmount(currentValue)
+                            .profitLoss(profitLoss)
+                            .build();
+                })
+                .toList();
     }
     public List<Transaction>getTransaction(String username){
         return transactionRepository.findByUsername(username);
@@ -49,7 +68,7 @@ public class TradingService {
         }
         String coin= request.getCoinSymbol().toUpperCase();
 
-        BigDecimal price= BigDecimal.valueOf(100.0);
+        BigDecimal price= BigDecimal.valueOf(200.0);
         BigDecimal quantity= BigDecimal.valueOf(request.getQuantity());
 
         BigDecimal totalCost= price.multiply(quantity);
@@ -64,7 +83,16 @@ public class TradingService {
         portfolioRepository.findByUsernameAndCoinSymbol(username,coin)
                 .ifPresentOrElse(
                         existing->{
-                            existing.setQuantity(existing.getQuantity().add(quantity));
+                            BigDecimal oldQty=existing.getQuantity();
+                            BigDecimal oldAvg=existing.getAverageBuyPrice();
+
+                            BigDecimal newQty=oldQty.add(quantity);
+
+                            BigDecimal totalOldCost= oldQty.multiply(oldAvg);
+                            BigDecimal totalNewCost= quantity.multiply(price);
+                            BigDecimal newAvg=totalOldCost.add(totalNewCost).divide(newQty,8, RoundingMode.HALF_UP);
+                            existing.setQuantity(newQty);
+                            existing.setAverageBuyPrice(newAvg);
                             portfolioRepository.save(existing);
                         },
                         ()->{
@@ -72,6 +100,7 @@ public class TradingService {
                                     .username(username)
                                     .coinSymbol(coin)
                                     .quantity(quantity)
+                                    .averageBuyPrice(price)
                                     .build();
                             portfolioRepository.save(newEntry);
                         }

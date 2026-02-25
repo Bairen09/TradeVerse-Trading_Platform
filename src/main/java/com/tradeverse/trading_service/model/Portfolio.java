@@ -26,4 +26,7 @@ public class Portfolio {
 
     @Column(nullable = false)
     private BigDecimal quantity;
+
+    @Column(nullable = false)
+    private BigDecimal averageBuyPrice;
 }

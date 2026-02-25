@@ -1,6 +1,7 @@
 package com.tradeverse.trading_service.controller;
 
 import com.tradeverse.trading_service.dto.BuyRequest;
+import com.tradeverse.trading_service.dto.PortfolioResponse;
 import com.tradeverse.trading_service.dto.SellRequest;
 import com.tradeverse.trading_service.dto.TradeResponse;
 import com.tradeverse.trading_service.model.Portfolio;
@@ -28,7 +29,7 @@ public class TradingController {
         return tradingService.getOrCreateWallet(getUsername());
     }
     @GetMapping("/portfolio")
-    public List<Portfolio>getPortfolio(){
+    public List<PortfolioResponse>getPortfolio(){
         return tradingService.getPortfolio(getUsername());
     }
     @GetMapping("/history")
